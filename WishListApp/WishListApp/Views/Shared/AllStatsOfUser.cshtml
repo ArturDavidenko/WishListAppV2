@@ -1,0 +1,30 @@
+﻿@{
+    @model User
+
+}
+
+@if (Model == null)
+{
+    <p>You are not have permission!</p>
+}
+else
+{
+    <h1>FULL STATS</h1>
+
+    
+        <tr>
+            <td><h3>User Name: @Model.UserName</h3></td>
+        <br>
+            <td>User ID: @Model.Id</td>
+        <br>
+            <td>User Email: @Model.Email</td>
+        <br>
+            <td>EmailConfirmed: @Model.EmailConfirmed</td>
+        <br>
+            <td>PhoneNumberConfirmed: @Model.PhoneNumberConfirmed</td>
+        <br>
+            <td>Password Hash: @Model.PasswordHash</td>
+        <br>
+            <td>NormalizedUserName: @Model.NormalizedUserName</td>
+        </tr>   
+}

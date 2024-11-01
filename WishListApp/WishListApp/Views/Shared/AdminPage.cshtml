@@ -1,0 +1,36 @@
+﻿@{
+    @model List<User>
+}
+
+@if (Model == null)
+{
+    <p>You are not have permission!</p>
+}
+else
+{
+    <h1>NU PRIVET ADMIN !!!!</h1>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td><h3>User Name: @item.UserName</h3></td>
+            <br>
+            <td>User ID: @item.Id</td>
+            <br>
+                <a asp-controller="Home" asp-action="AllStatsOfUser" asp-route-id="@item.Id" class="btn btn-primary">Show all information of user</a>
+                <a asp-controller="Home" asp-action="AddRoleToUserPage" asp-route-id="@item.Id" class="btn btn-warning">Add user role</a>
+                <a asp-controller="Home" asp-action="DeleteUserRolePage" asp-route-id="@item.Id" class="btn btn-warning">Delete user role</a>
+                <a asp-controller="Home" asp-action="UserWishListPage" asp-route-id="@item.Id" class="btn btn-success">Show user wish items</a>
+                <a asp-controller="Home" asp-action="DeleteUser" asp-route-id="@item.Id" class="btn btn-danger">Delete user</a>
+        </tr>
+        <br>
+    }
+    <div style="margin-top: 100px">
+        <a asp-action="CreateUserPage" asp-controller="Home" class="btn btn-success">Create User</a>
+    </div>
+}
+
+
+
+
+

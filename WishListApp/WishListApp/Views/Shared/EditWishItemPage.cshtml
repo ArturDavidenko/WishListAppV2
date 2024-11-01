@@ -1,0 +1,31 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@model WishItem
+
+@{
+    ViewData["Title"] = "Edit Wish Item";
+}
+
+
+<form asp-action="EditWishItem" method="post">
+    <div class="form-group">
+        <label asp-for="Title" class="control-label"></label>
+        <input asp-for="Title" value="@Model.Title" class="form-control"/>
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Description" class="control-label"></label>
+        <input asp-for="Description" value="@Model.Description" class="form-control"/>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <input asp-for="Id" type="hidden" value="@Model.Id"/>
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary"/>
+    </div>
+</form>
+
+<div>
+    <a asp-controller="Home" asp-action="WishItemsPage">Back to List</a>
+</div>
