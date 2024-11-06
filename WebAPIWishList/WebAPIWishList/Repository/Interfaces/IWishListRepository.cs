@@ -4,7 +4,7 @@ namespace WebAPIWishList.Repository.Interfaces
 {
     public interface IWishListRepository
     {
-        ICollection<WishItem> GetWishItems(string userId);
+        Task<ICollection<WishItem>> GetWishItems(string userId);
 
         WishItem GetWishItem(int id);
 

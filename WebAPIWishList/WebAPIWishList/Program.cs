@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
 using Swashbuckle.AspNetCore.Filters;
 using System.Security.Claims;
 using System.Text;
@@ -41,9 +42,26 @@ namespace WebAPIWishList
             builder.Services.AddScoped<IWishListRepository, WishListRepository>();
             builder.Services.AddScoped<IUsersRepository, UsersRepository>();
             builder.Services.AddScoped<AuthRepository>();
+            builder.Services.AddScoped<RedisRepository>();
 
             builder.Services.AddDbContext<DBContext>(options => {
                 options.UseNpgsql(builder.Configuration.GetConnectionString("WishListDataBase"));
+            });
+
+            var redisConnectionString = builder.Configuration.GetConnectionString("Redis");
+
+            //builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redisConnectionString));
+
+            //builder.Services.AddStackExchangeRedisCache(options =>
+            //{
+            //    options.Configuration = redisConnectionString;
+            //});
+
+            builder.Services.AddStackExchangeRedisCache(redisOptions =>
+            {
+                string connection = builder.Configuration.GetConnectionString("Redis");
+
+                redisOptions.Configuration = connection;
             });
 
             //builder.Services.AddIdentityCore<IdentityUser>()

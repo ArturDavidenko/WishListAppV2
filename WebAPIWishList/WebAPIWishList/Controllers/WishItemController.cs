@@ -5,6 +5,7 @@ using System.Security.Claims;
 using WebAPIWishList.Data;
 using WebAPIWishList.Dto;
 using WebAPIWishList.Models;
+using WebAPIWishList.Repository;
 using WebAPIWishList.Repository.Interfaces;
 
 namespace WebAPIWishList.Controllers
@@ -16,21 +17,23 @@ namespace WebAPIWishList.Controllers
     {
         private readonly IWishListRepository _wishListRepository;
         private readonly IMapper _mapper;
+        private readonly RedisRepository _redisRepository;
 
-        public WishItemController(IWishListRepository wishListRepository, IMapper mapper)
+        public WishItemController(IWishListRepository wishListRepository, IMapper mapper, RedisRepository redisRepository)
         {
             _wishListRepository = wishListRepository;
             _mapper = mapper;
+            _redisRepository = redisRepository;
         }
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<WishItem>))]
-        public IActionResult GetWishList()
+        public async Task<IActionResult> GetWishList()
         {
             try
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var WishLists = _mapper.Map<List<WishItemDto>>(_wishListRepository.GetWishItems(userId));
+                var WishLists = _mapper.Map<List<WishItemDto>>(await _redisRepository.GetWishItemsListAsync(userId));
                 return Ok(WishLists);
             }
             catch (Exception)

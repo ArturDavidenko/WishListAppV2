@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using WebAPIWishList.Data;
 using WebAPIWishList.Models;
 using WebAPIWishList.Repository.Interfaces;
@@ -8,6 +9,7 @@ namespace WebAPIWishList.Repository
     public class WishListRepository : IWishListRepository
     {
         private readonly DBContext _context;
+        
    
         public WishListRepository(DBContext context) 
         { 
@@ -29,7 +31,7 @@ namespace WebAPIWishList.Repository
             return _context.wishItems.Any(x => x.Id == id);
         }
 
-        public ICollection<WishItem> GetWishItems(string userId) 
+        public async Task<ICollection<WishItem>> GetWishItems(string userId) 
         {
             return _context.wishItems.Where(w => w.UserId == userId).ToList();
         }
