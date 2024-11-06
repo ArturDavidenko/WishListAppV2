@@ -1,2 +1,2 @@
 # WishListAppV2
-Simple wish list app with WEB API, JWT, PostgreSQL 
+Simple wish list app with WEB API, JWT, PostgreSQL and Redis.
