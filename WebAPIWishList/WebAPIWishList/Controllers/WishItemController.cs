@@ -62,15 +62,16 @@ namespace WebAPIWishList.Controllers
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateWishItem([FromBody] WishItemDto wishItemCreate)
+        public async Task<IActionResult> CreateWishItem([FromBody] WishItemDto wishItemCreate)
         {
             try
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 var wishItemMap = _mapper.Map<WishItem>(wishItemCreate);
                 wishItemMap.UserId = userId;
+                await _redisRepository.DeleteAllCache();
                 _wishListRepository.CreateWishItem(wishItemMap);
-                return NoContent();
+                return Ok();
             }
             catch (Exception)
             {
@@ -91,7 +92,7 @@ namespace WebAPIWishList.Controllers
                 wishItemMap.UserId = userId;
                 wishItemMap.Id = wishItemId;
                 _wishListRepository.UpdateWishItem(wishItemMap);
-                return NoContent();
+                return Ok();
             }
             catch (Exception)
             {
@@ -105,19 +106,38 @@ namespace WebAPIWishList.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult DeleteWishItem(int wishItemId) 
+        public async Task<IActionResult> DeleteWishItem(int wishItemId) 
         {
             try
             {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                await _redisRepository.DeleteSortedSet(wishItemId);
+                await _redisRepository.DeleteCacheKey(wishItemId, userId);
                 var wishItemToDelete = _wishListRepository.GetWishItem(wishItemId);
                 _wishListRepository.DeleteWishItem(wishItemToDelete);
-                return NoContent();
+                
+                return Ok();
             }
             catch (Exception)
             {
-
                 return BadRequest();
             }
         }
+
+        [HttpPut("popularity-control/{wishItemId}")]
+        public async Task<IActionResult> PopularityAction(int wishItemId)
+        {
+            try
+            {
+                await _redisRepository.AddWishViewToSortedSetAndIncrementAsync(wishItemId);
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            
+        }
+
     }
 }

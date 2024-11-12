@@ -50,13 +50,6 @@ namespace WebAPIWishList
 
             var redisConnectionString = builder.Configuration.GetConnectionString("Redis");
 
-            //builder.Services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redisConnectionString));
-
-            //builder.Services.AddStackExchangeRedisCache(options =>
-            //{
-            //    options.Configuration = redisConnectionString;
-            //});
-
             builder.Services.AddStackExchangeRedisCache(redisOptions =>
             {
                 string connection = builder.Configuration.GetConnectionString("Redis");
@@ -64,9 +57,8 @@ namespace WebAPIWishList
                 redisOptions.Configuration = connection;
             });
 
-            //builder.Services.AddIdentityCore<IdentityUser>()
-            //    .AddEntityFrameworkStores<DBContext>()
-            //    .AddDefaultTokenProviders();
+            builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+                ConnectionMultiplexer.Connect(redisConnectionString));
 
             builder.Services.AddIdentityApiEndpoints<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddRoles<IdentityRole>()
