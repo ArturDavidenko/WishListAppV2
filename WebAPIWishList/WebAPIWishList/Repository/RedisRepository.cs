@@ -4,6 +4,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.FileSystemGlobbing.Internal;
 using StackExchange.Redis;
 using System.Text.Json;
+using WebAPIWishList.Dto;
 using WebAPIWishList.Models;
 using WebAPIWishList.Repository.Interfaces;
 
@@ -87,7 +88,7 @@ namespace WebAPIWishList.Repository
 
             if (wishItems == null)
             {
-                return; // Если список пустой, ничего не делаем
+                return; 
             }
 
             var itemToRemove = wishItems.FirstOrDefault(w => w.Id == wishId);
@@ -98,6 +99,23 @@ namespace WebAPIWishList.Repository
 
             await _distributedCashe.SetStringAsync(listKey, JsonSerializer.Serialize(wishItems));
         }
+
+        public async Task UpdateWishItemsCacheAsync(int wishId, string userId, WishItemDto updatedWishItem)
+        {
+            var listKey = $"user-wish-items{userId}";
+
+            string json = await _distributedCashe.GetStringAsync(listKey);
+
+            var wishItems = JsonSerializer.Deserialize<List<WishItem>>(json);
+
+            var itemToUpdate = wishItems.FirstOrDefault(w => w.Id == wishId);
+
+            itemToUpdate.Description = updatedWishItem.Description;
+            itemToUpdate.Title = updatedWishItem.Title;
+
+            await _distributedCashe.SetStringAsync(listKey, JsonSerializer.Serialize(wishItems));
+        }
+
 
     }
 }

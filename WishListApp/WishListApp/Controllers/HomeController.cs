@@ -52,6 +52,7 @@ namespace WishListApp.Controllers
         public async Task<IActionResult> GetWishItemView(int id)
         {
             var wishItem = await _repository.GetWishItem(id);
+            await _repository.SetPopularityValue(id);
             return View("WishItemViewPage", wishItem);
         }
 
@@ -158,6 +159,10 @@ namespace WishListApp.Controllers
             return View("AdminPage", users);
         }
 
+        public async Task<IActionResult> PopularityPage()
+        {
+            return View();
+        }
 
     }
 }

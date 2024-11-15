@@ -17,5 +17,7 @@ namespace WishListApp.Repository.Interfaces
         public Task LogIn(string email, string password);
 
         public Task<bool> isAdmin();
+
+        public Task SetPopularityValue(int wishId);
     }
 }

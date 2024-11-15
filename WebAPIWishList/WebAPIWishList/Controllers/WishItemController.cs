@@ -83,7 +83,7 @@ namespace WebAPIWishList.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult UpdateWishItem([FromBody]WishItemDto updateWishItem, int wishItemId)
+        public async Task<IActionResult> UpdateWishItem([FromBody]WishItemDto updateWishItem, int wishItemId)
         {
             try
             {
@@ -91,6 +91,7 @@ namespace WebAPIWishList.Controllers
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 wishItemMap.UserId = userId;
                 wishItemMap.Id = wishItemId;
+                await _redisRepository.UpdateWishItemsCacheAsync(wishItemId, userId, updateWishItem);
                 _wishListRepository.UpdateWishItem(wishItemMap);
                 return Ok();
             }

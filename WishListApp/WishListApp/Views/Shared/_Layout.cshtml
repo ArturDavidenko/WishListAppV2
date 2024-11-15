@@ -34,6 +34,12 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="AdminPage">TEST</a>
                             }
                         </li>
+                        <li class="nav-item">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="PopularityPage">Popular wishes</a>
+                            }
+                        </li>
                     </ul>
                 </div>
             </div>

@@ -113,6 +113,12 @@ namespace WishListApp.Repository
             }
         }
 
+        public async Task SetPopularityValue(int wishId)
+        {
+            SetUpRequestHeaderAuthorization();
+            await _httpClient.PutAsync($"{_requestURL}/popularity-control/{wishId}", null);
+        }
+
 
     }
 }
