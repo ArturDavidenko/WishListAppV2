@@ -116,7 +116,6 @@ namespace WebAPIWishList.Controllers
                 await _redisRepository.DeleteCacheKey(wishItemId, userId);
                 var wishItemToDelete = _wishListRepository.GetWishItem(wishItemId);
                 _wishListRepository.DeleteWishItem(wishItemToDelete);
-                
                 return Ok();
             }
             catch (Exception)
@@ -138,6 +137,22 @@ namespace WebAPIWishList.Controllers
                 return BadRequest();
             }
             
+        }
+
+
+        [HttpGet("popular-wishes-list")]
+        [ProducesResponseType(200, Type = typeof(List<PopularityWishItemsViewModel>))]
+        public async Task<IActionResult> GetPopularityWishItemsList()
+        {
+            try
+            {
+                var PopularWishes = await _redisRepository.GetPopularsWishes();
+                return Ok(PopularWishes);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
 
     }

@@ -161,7 +161,8 @@ namespace WishListApp.Controllers
 
         public async Task<IActionResult> PopularityPage()
         {
-            return View();
+            var PopularityWishes = await _repository.GetPopularityWishesList();
+            return View(PopularityWishes);
         }
 
     }

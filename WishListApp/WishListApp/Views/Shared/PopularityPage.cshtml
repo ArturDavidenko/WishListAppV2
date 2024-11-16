@@ -1,6 +1,35 @@
 ﻿
 @{
+
 }
 
+@model List<PopularityWishItemsViewModel>
 
-<p>Popularity PAGE !</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wish List</title>
+    <link rel="stylesheet" href="~/css/HomeStyle.css" asp-append-version="true" />
+</head>
+<body>
+    <main>
+        <section class="list-section">
+            <h2>Popularity Wishes</h2>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><h3>@item.Title</h3></td>
+                    <br>
+                    <td>Description: @item.Description</td>
+                    <br>
+                    <td>Views: @item.CountOfView</td>
+                </tr>
+                <br>
+            }
+        </section>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>

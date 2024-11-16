@@ -19,5 +19,7 @@ namespace WishListApp.Repository.Interfaces
         public Task<bool> isAdmin();
 
         public Task SetPopularityValue(int wishId);
+
+        public Task<List<PopularityWishItemsViewModel>> GetPopularityWishesList();
     }
 }

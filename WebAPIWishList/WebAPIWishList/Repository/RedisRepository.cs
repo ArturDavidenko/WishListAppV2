@@ -58,9 +58,34 @@ namespace WebAPIWishList.Repository
             await _redisDb.SortedSetIncrementAsync(PopularWisheskey, $"wish:{wishId}", 1); 
         }
 
-        public async Task<SortedSetEntry[]> GetPopularsWishes()
+        public async Task<List<PopularityWishItemsViewModel>> GetPopularsWishes()
         {
-            return await _redisDb.SortedSetRangeByScoreWithScoresAsync("popular_wishes", order: Order.Descending, take: 10);
+            var sortedSetEntityWishes = await _redisDb.SortedSetRangeByScoreWithScoresAsync("popular_wishes", order: Order.Descending, take: 10);
+
+            var popularWishItems = new List<PopularityWishItemsViewModel>();
+
+            foreach (var sortedSetEntry in sortedSetEntityWishes)
+            {
+                string memberName = sortedSetEntry.Element.ToString();
+                if (!memberName.StartsWith("wish:")) continue;
+
+                int wishId = int.Parse(memberName.Replace("wish:", ""));
+
+                var wishItem = _wishListRepository.GetWishItem(wishId);
+
+                if (wishItem != null)
+                {
+                    popularWishItems.Add(new PopularityWishItemsViewModel
+                    {
+                        Id = wishItem.Id,
+                        Title = wishItem.Title,
+                        Description = wishItem.Description,
+                        CountOfView = sortedSetEntry.Score,
+                        UserId = wishItem.UserId,
+                    });
+                }
+            }
+            return popularWishItems;
         }
 
         public async Task DeleteSortedSet(int wishId)

@@ -119,6 +119,16 @@ namespace WishListApp.Repository
             await _httpClient.PutAsync($"{_requestURL}/popularity-control/{wishId}", null);
         }
 
+        public async Task<List<PopularityWishItemsViewModel>> GetPopularityWishesList()
+        {
+            SetUpRequestHeaderAuthorization();
+            HttpResponseMessage response = await _httpClient.GetAsync($"{_requestURL}/popular-wishes-list");
 
+            string jsonResponse = await response.Content.ReadAsStringAsync();
+            List<PopularityWishItemsViewModel> PopularitywishItems = JsonSerializer.Deserialize<List<PopularityWishItemsViewModel>>(jsonResponse);
+
+            return PopularitywishItems;
+
+        }
     }
 }
