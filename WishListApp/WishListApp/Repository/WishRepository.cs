@@ -12,11 +12,15 @@ namespace WishListApp.Repository
     {
         private readonly HttpClient _httpClient;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly string _requestURL;
+        private readonly string _wishItemURL;
+        private readonly string _adminURL;
+        private readonly string _authURL;
 
         public WishRepository(IOptions<ApiSettings> apiSettings, HttpClient httpClient, IHttpContextAccessor httpContextAccessor)
         {
-            _requestURL = apiSettings.Value.RequestURL;
+            _wishItemURL = apiSettings.Value.WishItemURL;
+            _adminURL = apiSettings.Value.AdminURL;
+            _authURL = apiSettings.Value.AuthURL;
             _httpClient = httpClient;
             _httpContextAccessor = httpContextAccessor;
         }
@@ -25,19 +29,19 @@ namespace WishListApp.Repository
         {
             SetUpRequestHeaderAuthorization();
             var jsonContent = new StringContent(JsonSerializer.Serialize(wishItem), Encoding.UTF8, "application/json");
-            await _httpClient.PostAsync(_requestURL, jsonContent);
+            await _httpClient.PostAsync(_wishItemURL, jsonContent);
         }
 
         public async Task DeleteWishItem(int id)
         {
             SetUpRequestHeaderAuthorization();
-            await _httpClient.DeleteAsync($"{_requestURL}/{id}");
+            await _httpClient.DeleteAsync($"{_wishItemURL}/{id}");
         }
 
         public async Task<WishItem> GetWishItem(int id)
         {
             SetUpRequestHeaderAuthorization();
-            HttpResponseMessage response = await _httpClient.GetAsync($"{_requestURL}/{id}");
+            HttpResponseMessage response = await _httpClient.GetAsync($"{_wishItemURL}/{id}");
 
             string jsonResponse = await response.Content.ReadAsStringAsync();
             WishItem wishItem = JsonSerializer.Deserialize<WishItem>(jsonResponse);
@@ -47,7 +51,7 @@ namespace WishListApp.Repository
         public async Task<List<WishItem>> GetWishItems()
         {
             SetUpRequestHeaderAuthorization();
-            HttpResponseMessage response = await _httpClient.GetAsync(_requestURL);
+            HttpResponseMessage response = await _httpClient.GetAsync(_wishItemURL);
              
             string jsonResponse = await response.Content.ReadAsStringAsync();
             List<WishItem> wishItems = JsonSerializer.Deserialize<List<WishItem>>(jsonResponse);
@@ -57,7 +61,7 @@ namespace WishListApp.Repository
         public async Task<bool> isAdmin()
         {
             SetUpRequestHeaderAuthorization();
-            HttpResponseMessage response = await _httpClient.GetAsync("https://localhost:7043/api/Admin/isAdmin");
+            HttpResponseMessage response = await _httpClient.GetAsync($"{_adminURL}/isAdmin");
             string jsonResponse = await response.Content.ReadAsStringAsync();
             bool isAdmin = JsonSerializer.Deserialize<bool>(jsonResponse);
             return isAdmin;
@@ -72,7 +76,7 @@ namespace WishListApp.Repository
             };
 
             var jsonContent = new StringContent(JsonSerializer.Serialize(loginViewModel), Encoding.UTF8, "application/json");
-            var responseLogin = await _httpClient.PostAsync("https://localhost:7043/api/Auth/login", jsonContent);
+            var responseLogin = await _httpClient.PostAsync($"{_authURL}/login", jsonContent);
             
             var token = await responseLogin.Content.ReadFromJsonAsync<JwtTokenResponse>();
             
@@ -99,7 +103,7 @@ namespace WishListApp.Repository
             SetUpRequestHeaderAuthorization();
             var json = JsonSerializer.Serialize(itemToSave);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            await _httpClient.PutAsync($"{_requestURL}/{item.Id}", content); 
+            await _httpClient.PutAsync($"{_wishItemURL}/{item.Id}", content); 
         }
 
         public void SetUpRequestHeaderAuthorization()
@@ -116,13 +120,13 @@ namespace WishListApp.Repository
         public async Task SetPopularityValue(int wishId)
         {
             SetUpRequestHeaderAuthorization();
-            await _httpClient.PutAsync($"{_requestURL}/popularity-control/{wishId}", null);
+            await _httpClient.PutAsync($"{_wishItemURL}/popularity-control/{wishId}", null);
         }
 
         public async Task<List<PopularityWishItemsViewModel>> GetPopularityWishesList()
         {
             SetUpRequestHeaderAuthorization();
-            HttpResponseMessage response = await _httpClient.GetAsync($"{_requestURL}/popular-wishes-list");
+            HttpResponseMessage response = await _httpClient.GetAsync($"{_wishItemURL}/popular-wishes-list");
 
             string jsonResponse = await response.Content.ReadAsStringAsync();
             List<PopularityWishItemsViewModel> PopularitywishItems = JsonSerializer.Deserialize<List<PopularityWishItemsViewModel>>(jsonResponse);

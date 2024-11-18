@@ -2,6 +2,8 @@
 {
     public class ApiSettings
     {
-        public string RequestURL { get; set; }
+        public string WishItemURL { get; set; }
+        public string AdminURL { get; set; }
+        public string AuthURL { get; set; }
     }
 }

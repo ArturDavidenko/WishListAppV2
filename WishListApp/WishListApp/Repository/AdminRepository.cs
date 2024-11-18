@@ -12,18 +12,20 @@ namespace WishListApp.Repository
 
         private readonly HttpClient _httpClient;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly string _adminURL;
 
-        public AdminRepository(HttpClient httpClient, IHttpContextAccessor httpContextAccessor)
+        public AdminRepository(HttpClient httpClient, IHttpContextAccessor httpContextAccessor, IOptions<ApiSettings> apiSettings)
         {
             _httpClient = httpClient;
-            _httpContextAccessor = httpContextAccessor;  
+            _httpContextAccessor = httpContextAccessor;
+            _adminURL = apiSettings.Value.AdminURL;
         }
 
         public async Task<List<User>> GetUsers()
         {
             SetUpRequestHeaderAuthorization();
 
-            HttpResponseMessage response = await _httpClient.GetAsync("https://localhost:7043/api/Admin");
+            HttpResponseMessage response = await _httpClient.GetAsync(_adminURL);
             string jsonResponse = await response.Content.ReadAsStringAsync();
             List<User> usersList = JsonSerializer.Deserialize<List<User>>(jsonResponse);
 
@@ -34,7 +36,7 @@ namespace WishListApp.Repository
         {
             SetUpRequestHeaderAuthorization();
 
-            HttpResponseMessage response = await _httpClient.GetAsync($"https://localhost:7043/api/Admin/get-user-wishlist/{userId}");
+            HttpResponseMessage response = await _httpClient.GetAsync($"{_adminURL}/get-user-wishlist/{userId}");
 
 
             string jsonResponse = await response.Content.ReadAsStringAsync();
@@ -48,7 +50,7 @@ namespace WishListApp.Repository
         {
             SetUpRequestHeaderAuthorization();
 
-            HttpResponseMessage response = await _httpClient.GetAsync($"https://localhost:7043/api/Admin/get-user/{userId}");
+            HttpResponseMessage response = await _httpClient.GetAsync($"{_adminURL}/get-user/{userId}");
             string jsonResponse = await response.Content.ReadAsStringAsync();
 
             User user = JsonSerializer.Deserialize<User>(jsonResponse);
@@ -61,7 +63,7 @@ namespace WishListApp.Repository
         {
             SetUpRequestHeaderAuthorization();
 
-            await _httpClient.DeleteAsync($"https://localhost:7043/api/Admin/{userId}");
+            await _httpClient.DeleteAsync($"{_adminURL}/{userId}");
             
         }
 
@@ -69,21 +71,21 @@ namespace WishListApp.Repository
         {
             SetUpRequestHeaderAuthorization();
 
-            await _httpClient.PostAsync($"https://localhost:7043/api/Admin/crete-user-withRole/{email}/{password}/{roleName}", null);
+            await _httpClient.PostAsync($"{_adminURL}/crete-user-withRole/{email}/{password}/{roleName}", null);
         }
 
         public async Task AddRoleToUser(AddRoleUserViewModel model)
         {
             SetUpRequestHeaderAuthorization();
 
-            await _httpClient.PostAsync($"https://localhost:7043/api/Admin/add-role/{model.UserId}/{model.UserRoleNameToAdd}", null);
+            await _httpClient.PostAsync($"{_adminURL}/add-role/{model.UserId}/{model.UserRoleNameToAdd}", null);
         }
 
         public async Task<List<string>> GetUsersRoles(string userId)
         {
             SetUpRequestHeaderAuthorization();
 
-            var listresponse = await _httpClient.GetAsync($"https://localhost:7043/api/Admin/get-user-roles/{userId}");
+            var listresponse = await _httpClient.GetAsync($"{_adminURL}/get-user-roles/{userId}");
             string jsonResponse = await listresponse.Content.ReadAsStringAsync();
 
             List<string> listOfRoles = JsonSerializer.Deserialize<List<string>>(jsonResponse);
@@ -96,7 +98,7 @@ namespace WishListApp.Repository
             var token = _httpContextAccessor.HttpContext.Session.GetString("authToken");
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-            await _httpClient.PostAsync($"https://localhost:7043/api/Admin/delete-role/{model.UserId}/{model.UserRoleNameToAdd}", null);
+            await _httpClient.PostAsync($"{_adminURL}/delete-role/{model.UserId}/{model.UserRoleNameToAdd}", null);
         }
 
         public void SetUpRequestHeaderAuthorization()
