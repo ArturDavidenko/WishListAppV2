@@ -26,16 +26,13 @@
             <h2>Your Wishes</h2>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td><h3>@item.Title</h3></td>
-                    <br>
-                    <td>Description: @item.Description</td>
-                    <br>
+                <section class="card">
+                    <h3>@item.Title</h3>
+                    <p>Description: @item.Description</p>
                     <a asp-controller="Home" asp-action="GetWishItemView" asp-route-id="@item.Id" class="btn btn-primary">Show Wish Item</a>
                     <a asp-controller="Home" asp-action="EditWishItemPage" asp-route-id="@item.Id" class="btn btn-warning">Edit Wish Item</a>
                     <a asp-controller="Home" asp-action="DeleteWishItem" asp-route-id="@item.Id" class="btn btn-danger">Delete Wish Item</a>
-                </tr>
-                <br>
+                </section>
             }               
         </section>
     </main>

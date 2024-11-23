@@ -131,11 +131,11 @@ namespace WebAPIWishList.Controllers
 
 
         [HttpGet("get-user/{UserId}")]
-        public IActionResult GetUser(string UserId) 
+        public async Task<IActionResult> GetUser(string UserId) 
         {
             try
             {
-                var user =  _usersRepository.GetUser(UserId);
+                var user =  await _usersRepository.GetUser(UserId);
                 return Ok(user);
             }
             catch (Exception)

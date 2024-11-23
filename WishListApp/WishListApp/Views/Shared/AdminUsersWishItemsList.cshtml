@@ -23,13 +23,10 @@
             <h2>User Wishes</h2>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td><h3>@item.Title</h3></td>
-                    <br>
-                    <td>Description: @item.Description</td>
-                    <br> 
-                </tr>
-                <br>
+                <section class="card">
+                    <h3>@item.Title</h3>
+                    <p>Description: @item.Description</p>
+                </section>
             }
         </section>
     </main>

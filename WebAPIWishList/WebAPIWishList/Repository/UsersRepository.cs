@@ -73,9 +73,9 @@ namespace WebAPIWishList.Repository
             }
         }
 
-        public IdentityUser GetUser(string id)
+        public async Task<IdentityUser> GetUser(string id)
         {
-            return _context.Users.SingleOrDefault(u => u.Id == id);
+            return await _context.Users.SingleOrDefaultAsync(u => u.Id == id);
         }
 
         public async Task<IList<string>> GetRolesOfUser(string id)

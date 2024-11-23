@@ -17,8 +17,79 @@ main {
 
 .form-section,
 .list-section {
-    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column; /* Располагает элементы по вертикали */
+    gap: 20px; /* Расстояние между карточками */
+    padding: 20px;
+    align-items: center; /* Центрирование карточек по горизонтали */
+    background-color: #f8f9fa; /* Светлый фон для всей секции */
 }
+
+.card {
+    background: #fff; /* Белый фон для карточки */
+    border-radius: 8px; /* Закругленные углы */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Тень вокруг карточки */
+    padding: 20px; /* Внутренние отступы */
+    max-width: 500px; /* Максимальная ширина карточки */
+    width: 100%; /* Карточки занимают всю ширину контейнера */
+    box-sizing: border-box;
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Эффект при наведении */
+    display: flex; /* Flexbox для выравнивания */
+    flex-direction: column; /* Располагаем содержимое по вертикали */
+    align-items: center; /* Центрируем всё содержимое по горизонтали */
+    gap: 10px; /* Отступы между элементами */
+}
+
+    .card h3 {
+        margin-top: 0; /* Убираем верхний отступ */
+        font-size: 1.5rem;
+        color: #333;
+        text-align: center; /* Центрируем текст заголовка */
+    }
+
+    .card p {
+        margin: 10px 0; /* Отступы между текстами */
+        color: #555;
+        text-align: center; /* Центрируем описание */
+    }
+
+    /* Эффект при наведении на карточку */
+    .card:hover {
+        transform: translateY(-5px); /* Карточка немного поднимается */
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* Увеличение тени */
+    }
+
+    .card a {
+        text-align: center; /* Центрируем текст внутри кнопок */
+        margin: 0; /* Убираем внешние отступы */
+        padding: 10px 20px; /* Внутренние отступы для кнопок */
+        width: 80%; /* Ширина кнопок как процент от карточки */
+        background-color: #007bff; /* Синий фон */
+        color: #fff; /* Белый текст */
+        border-radius: 5px; /* Закруглённые углы */
+        text-decoration: none; /* Убираем подчеркивание */
+        transition: background-color 0.3s ease; /* Эффект при наведении */
+    }
+
+        .card a:hover {
+            background-color: #0056b3; /* Цвет при наведении */
+        }
+
+    .card .btn-danger {
+        background-color: #dc3545; /* Красный фон */
+    }
+
+        .card .btn-danger:hover {
+            background-color: #a71d2a; /* Более тёмный красный при наведении */
+        }
+
+    .card .btn-warning {
+        background-color: #ffc107; /* Желтый фон */
+    }
+
+        .card .btn-warning:hover {
+            background-color: #e0a800; /* Более тёмный желтый при наведении */
+        }
 
 h2 {
     margin-bottom: 10px;
@@ -46,4 +117,6 @@ button {
     button:hover {
         background-color: #45a049;
     }
+
+
 

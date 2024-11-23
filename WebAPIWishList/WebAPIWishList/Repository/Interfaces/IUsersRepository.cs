@@ -17,7 +17,7 @@ namespace WebAPIWishList.Repository.Interfaces
 
         public Task DeleteRoleFromUser(string id, string roleName);
 
-        public IdentityUser GetUser(string id);
+        public Task<IdentityUser> GetUser(string id);
 
         public Task<IList<string>> GetRolesOfUser(string id);
 

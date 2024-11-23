@@ -19,14 +19,12 @@
             <h2>Popularity Wishes</h2>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td><h3>@item.Title</h3></td>
-                    <br>
-                    <td>Description: @item.Description</td>
-                    <br>
-                    <td>Views: @item.CountOfView</td>
-                </tr>
-                <br>
+                <article class="card">
+                    <h3>@item.Title</h3>
+                    <p>Description: @item.Description</p>
+                    <p>Creator: @item.UserName</p>
+                    <p>Views: @item.CountOfView</p>
+                </article>  
             }
         </section>
     </main>

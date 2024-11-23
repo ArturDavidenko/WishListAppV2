@@ -18,5 +18,8 @@ namespace WishListApp.Models
 
         [JsonPropertyName("countOfView")]
         public double CountOfView { get; set; }
+
+        [JsonPropertyName("userName")]
+        public string UserName { get; set; }
     }
 }

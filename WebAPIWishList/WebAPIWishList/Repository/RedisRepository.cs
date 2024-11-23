@@ -14,16 +14,19 @@ namespace WebAPIWishList.Repository
     {
         private readonly IDistributedCache _distributedCashe;
         private readonly IWishListRepository _wishListRepository;
+        private readonly IUsersRepository _usersRepository;
         private readonly IDatabase _redisDb;
         private readonly StackExchange.Redis.IServer _redisServer;
         string PopularWisheskey = "popular_wishes";
 
-        public RedisRepository(IDistributedCache distributedCache, IWishListRepository wishListRepository, IConnectionMultiplexer connectionMultiplexer)
+
+        public RedisRepository(IDistributedCache distributedCache, IWishListRepository wishListRepository, IUsersRepository usersRepository, IConnectionMultiplexer connectionMultiplexer)
         {
             _distributedCashe = distributedCache;
             _wishListRepository = wishListRepository;
             _redisDb = connectionMultiplexer.GetDatabase();
             _redisServer = connectionMultiplexer.GetServer("redis-16632.c274.us-east-1-3.ec2.redns.redis-cloud.com", 16632);
+            _usersRepository = usersRepository;
         }
 
         public async Task<ICollection<WishItem>> GetWishItemsListAsync(string userId)
@@ -73,6 +76,8 @@ namespace WebAPIWishList.Repository
 
                 var wishItem = _wishListRepository.GetWishItem(wishId);
 
+                var user = await _usersRepository.GetUser(wishItem.UserId);
+
                 if (wishItem != null)
                 {
                     popularWishItems.Add(new PopularityWishItemsViewModel
@@ -82,6 +87,7 @@ namespace WebAPIWishList.Repository
                         Description = wishItem.Description,
                         CountOfView = sortedSetEntry.Score,
                         UserId = wishItem.UserId,
+                        UserName = user.UserName,
                     });
                 }
             }
