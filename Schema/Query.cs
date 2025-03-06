@@ -27,6 +27,6 @@ namespace GraphQLWishList.Schema
 
 
         [GraphQLDeprecated("Ussless one!")]
-        public string Test => ("HAJ DEVIL!");
+        public string Test => ("HAJ DEBIL!");
     }
 }
