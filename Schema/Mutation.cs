@@ -1,5 +1,7 @@
 ﻿using GraphQLWishList.Models;
 using GraphQLWishList.Repository.Interfaces;
+using GraphQLWishList.Schema.Subscriptions;
+using HotChocolate.Subscriptions;
 
 namespace GraphQLWishList.Schema
 {
@@ -11,20 +13,12 @@ namespace GraphQLWishList.Schema
             _employeerRepository = employeerRepository;
         }
 
-        public async Task<bool> CreateEmployeer(string password, string firstname, string lastname, string role, string phonenumber)
+        public async Task<bool> CreateEmployeer(RegisterEmployeerModel model, [Service] ITopicEventSender topicEventSender)
         {
             try
             {
-                var model = new RegisterEmployeerModel
-                {
-                    Password = password,
-                    FirstName = firstname,
-                    LastName = lastname,
-                    Role = role,
-                    PhoneNumber = phonenumber
-                };
-
                 await _employeerRepository.CreateEmployeer(model);
+                await topicEventSender.SendAsync(nameof(Subscription.EmployeerAdded), model);
                 return true;
             }
             catch

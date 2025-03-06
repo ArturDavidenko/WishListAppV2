@@ -1,6 +1,7 @@
 using GraphQLWishList.Repository;
 using GraphQLWishList.Repository.Interfaces;
 using GraphQLWishList.Schema;
+using GraphQLWishList.Schema.Subscriptions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
@@ -27,7 +28,9 @@ namespace GraphQLWishList
             builder.Services
                 .AddGraphQLServer()
                 .AddQueryType<Query>()
-                .AddMutationType<Mutation>();
+                .AddMutationType<Mutation>()
+                .AddSubscriptionType<Subscription>()
+                .AddInMemorySubscriptions();
 
             //builder.Services.AddSession(options =>
             //{
@@ -79,6 +82,8 @@ namespace GraphQLWishList
             app.UseAuthentication();
             //app.UseAuthorization();
             //app.UseSession();
+
+            app.UseWebSockets();
 
             app.MapGraphQL();
 
